@@ -343,7 +343,7 @@ class test_Consumer(Case):
 
         in_bucket = self.ready_queue.get_nowait()
         self.assertIsInstance(in_bucket, Request)
-        self.assertEqual(in_bucket.task_name, foo_task.name)
+        self.assertEqual(in_bucket.name, foo_task.name)
         self.assertEqual(in_bucket.execute(), 2 * 4 * 8)
         self.assertTrue(self.eta_schedule.empty())
 
@@ -553,14 +553,14 @@ class test_Consumer(Case):
         l.event_dispatcher = Mock()
         l.connection_errors = (socket.error, )
         l.logger = Mock()
-        m.ack = Mock()
-        m.ack.side_effect = socket.error("foo")
+        m.reject = Mock()
+        m.reject.side_effect = socket.error("foo")
         with self.assertWarnsRegex(RuntimeWarning, r'unknown message'):
             self.assertFalse(l.receive_message(m.decode(), m))
         with self.assertRaises(Empty):
             self.ready_queue.get_nowait()
         self.assertTrue(self.eta_schedule.empty())
-        m.ack.assert_called_with()
+        m.reject.assert_called_with()
         self.assertTrue(l.logger.critical.call_count)
 
     def test_receieve_message_eta(self):
@@ -590,7 +590,7 @@ class test_Consumer(Case):
         eta, priority, entry = in_hold
         task = entry.args[0]
         self.assertIsInstance(task, Request)
-        self.assertEqual(task.task_name, foo_task.name)
+        self.assertEqual(task.name, foo_task.name)
         self.assertEqual(task.execute(), 2 * 4 * 8)
         with self.assertRaises(Empty):
             self.ready_queue.get_nowait()

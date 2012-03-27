@@ -6,6 +6,7 @@ if __name__ == "__main__" and __package__ is None:
 
 import sys
 
+from importlib import import_module
 from optparse import OptionParser, make_option as Option
 from pprint import pformat
 from textwrap import wrap
@@ -204,7 +205,7 @@ class apply(Command):
                                  routing_key=kw.get("routing_key"),
                                  eta=maybe_iso8601(kw.get("eta")),
                                  expires=expires)
-        self.out(res.task_id)
+        self.out(res.id)
 apply = command(apply)
 
 
@@ -369,12 +370,29 @@ class shell(Command):
                 Option("--without-tasks", "-T", action="store_true",
                     dest="without_tasks", default=False,
                     help="Don't add tasks to locals."),
+                Option("--eventlet", action="store_true",
+                    dest="eventlet", default=False,
+                    help="Use eventlet."),
+                Option("--gevent", action="store_true",
+                    dest="gevent", default=False,
+                    help="Use gevent."),
     )
 
     def run(self, force_ipython=False, force_bpython=False,
-            force_python=False, without_tasks=False, **kwargs):
+            force_python=False, without_tasks=False, eventlet=False,
+            gevent=False, **kwargs):
+        if eventlet:
+            import_module("celery.concurrency.eventlet")
+        if gevent:
+            import_module("celery.concurrency.gevent")
+        from .. import task
         self.app.loader.import_default_modules()
-        self.locals = {"celery": self.app}
+        self.locals = {"celery": self.app,
+                       "BaseTask": task.BaseTask,
+                       "TaskSet": task.TaskSet,
+                       "chord": task.chord,
+                       "group": task.group,
+                       "chain": task.chain}
 
         if not without_tasks:
             self.locals.update(dict((task.__name__, task)
@@ -446,6 +464,7 @@ help = command(help)
 
 class celeryctl(CeleryCommand):
     commands = commands
+    enable_config_from_cmdline = True
 
     def execute(self, command, argv=None):
         try:

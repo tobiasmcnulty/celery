@@ -4,7 +4,6 @@ import os
 import sys
 import warnings
 
-from celery import task
 from celery import loaders
 from celery.app import app_or_default
 from celery.exceptions import ImproperlyConfigured
@@ -96,7 +95,7 @@ class TestLoaderBase(Case):
         modnames = lambda l: [m.__name__ for m in l]
         self.assertEqual(sorted(modnames(
                             self.loader.import_default_modules())),
-                         sorted(modnames([os, sys, task])))
+                         sorted(modnames([os, sys])))
 
     def test_import_from_cwd_custom_imp(self):
 

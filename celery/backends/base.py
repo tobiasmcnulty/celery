@@ -10,6 +10,7 @@ from datetime import timedelta
 from kombu import serialization
 
 from .. import states
+from ..app import current_task
 from ..datastructures import LRUCache
 from ..exceptions import TimeoutError, TaskRevokedError
 from ..utils import timeutils
@@ -174,6 +175,10 @@ class BaseBackend(object):
         raise NotImplementedError(
                 "get_result is not supported by this backend.")
 
+    def get_children(self, task_id):
+        raise NotImplementedError(
+                "get_children is not supported by this backend.")
+
     def get_traceback(self, task_id):
         """Get the traceback for a failed task."""
         raise NotImplementedError(
@@ -207,9 +212,14 @@ class BaseBackend(object):
         pass
 
     def on_chord_apply(self, setid, body, result=None, **kwargs):
-        kwargs["result"] = [r.task_id for r in result]
+        kwargs["result"] = [r.id for r in result]
         self.app.tasks["celery.chord_unlock"].apply_async((setid, body, ),
                                                           kwargs, countdown=1)
+
+    def current_task_children(self):
+        current = current_task()
+        if current:
+            return [r.serializable() for r in current.request.children]
 
     def __reduce__(self, args=(), kwargs={}):
         return (unpickle_backend, (self.__class__, args, kwargs))
@@ -250,6 +260,13 @@ class BaseDictBackend(BaseBackend):
             return self.exception_to_python(meta["result"])
         else:
             return meta["result"]
+
+    def get_children(self, task_id):
+        """Get the list of subtasks sent by a task."""
+        try:
+            return self.get_task_meta(task_id)["children"]
+        except KeyError:
+            pass
 
     def get_task_meta(self, task_id, cache=True):
         if cache:
@@ -377,7 +394,8 @@ class KeyValueStoreBackend(BaseDictBackend):
         self.delete(self.get_key_for_task(task_id))
 
     def _store_result(self, task_id, result, status, traceback=None):
-        meta = {"status": status, "result": result, "traceback": traceback}
+        meta = {"status": status, "result": result, "traceback": traceback,
+                "children": self.current_task_children()}
         self.set(self.get_key_for_task(task_id), self.encode(meta))
         return result
 

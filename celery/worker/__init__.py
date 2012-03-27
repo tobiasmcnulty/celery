@@ -226,8 +226,7 @@ class WorkController(configurated):
         except SystemTerminate:
             self.terminate()
         except Exception as exc:
-            self.logger.error("Unrecoverable error: %r", exc,
-                              exc_info=sys.exc_info())
+            self.logger.error("Unrecoverable error: %r", exc, exc_info=True)
             self.stop()
         except (KeyboardInterrupt, SystemExit):
             self.stop()

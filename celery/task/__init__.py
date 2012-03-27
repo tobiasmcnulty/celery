@@ -15,10 +15,10 @@ from .. import current_app
 from ..app import current_task as _current_task
 from ..local import Proxy
 
-from .base import Task, PeriodicTask        # noqa
-from .sets import group, TaskSet, subtask   # noqa
-from .chords import chord                   # noqa
-from .control import discard_all            # noqa
+from .base import BaseTask, Task, PeriodicTask  # noqa
+from .sets import group, TaskSet, subtask       # noqa
+from .chords import chord                       # noqa
+from .control import discard_all                # noqa
 
 current = Proxy(_current_task)
 task = Proxy(lambda: current_app.task)
@@ -39,12 +39,19 @@ def periodic_task(*args, **options):
 
             .. code-block:: python
 
+                from celery.task import current
+
                 @task(exchange="feeds")
                 def refresh_feed(url):
                     try:
                         return Feed.objects.get(url=url).refresh()
+<<<<<<< HEAD
                     except socket.error as exc:
                         refresh_feed.retry(exc=exc)
+=======
+                    except socket.error, exc:
+                        current.retry(exc=exc)
+>>>>>>> master
 
             Calling the resulting task:
 
@@ -57,3 +64,9 @@ def periodic_task(*args, **options):
     return task(**dict({"base": PeriodicTask}, **options))
 
 backend_cleanup = Proxy(lambda: current_app.tasks["celery.backend_cleanup"])
+
+
+def chain(*tasks):
+    tasks = [task.clone() for task in tasks]
+    reduce(lambda a, b: a.link(b), tasks)
+    return tasks[0]

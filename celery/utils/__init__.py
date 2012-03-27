@@ -275,6 +275,12 @@ def truncate_text(text, maxlen=128, suffix="..."):
     return text
 
 
+def pluralize(n, text, suffix='s'):
+    if n > 1:
+        return text + suffix
+    return text
+
+
 def abbr(S, max, ellipsis="..."):
     if S is None:
         return "???"
@@ -415,9 +421,3 @@ def maybe_reraise():
     finally:
         # see http://docs.python.org/library/sys.html#sys.exc_info
         del(tb)
-
-
-def pluralize(n, text, suffix='s'):
-    if n > 1:
-        return text + suffix
-    return text

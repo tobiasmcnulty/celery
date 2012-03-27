@@ -99,6 +99,11 @@ class Command(object):
         """Get supported command line options."""
         return self.option_list
 
+    def expanduser(self, value):
+        if isinstance(value, basestring):
+            return os.path.expanduser(value)
+        return value
+
     def handle_argv(self, prog_name, argv):
         """Parses command line arguments from ``argv`` and dispatches
         to :meth:`run`.
@@ -110,17 +115,16 @@ class Command(object):
         and ``argv`` contains positional arguments.
 
         """
+
         options, args = self.parse_options(prog_name, argv)
-        for o in vars(options):
-            v = getattr(options, o)
-            if isinstance(v, basestring):
-                setattr(options, o, os.path.expanduser(v))
-        argv = map(lambda a: isinstance(a, basestring)
-                   and os.path.expanduser(a) or a, argv)
+        options = dict((k, self.expanduser(v))
+                        for k, v in vars(options).iteritems()
+                            if not k.startswith('_'))
+        argv = map(self.expanduser, argv)
         if not self.supports_args and args:
             print(UNKNOWN_ARGS.format(args=", ".join(args), file=sys.stderr))
             sys.exit(1)
-        return self.run(*args, **vars(options))
+        return self.run(*args, **options)
 
     def parse_options(self, prog_name, arguments):
         """Parse the available options."""
@@ -130,8 +134,7 @@ class Command(object):
             print(self.version)
             sys.exit(0)
         parser = self.create_parser(prog_name)
-        options, args = parser.parse_args(arguments)
-        return options, args
+        return parser.parse_args(arguments)
 
     def create_parser(self, prog_name):
         return self.Parser(prog=prog_name,

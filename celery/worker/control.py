@@ -11,8 +11,6 @@
 """
 from __future__ import absolute_import
 
-import sys
-
 from datetime import datetime
 
 from ..platforms import signals as _signals
@@ -43,7 +41,7 @@ def revoke(panel, task_id, terminate=False, signal=None, **kwargs):
     if terminate:
         signum = _signals.signum(signal or "TERM")
         for request in state.active_requests:
-            if request.task_id == task_id:
+            if request.id == task_id:
                 action = "terminated ({0})".format(signum)
                 request.terminate(panel.consumer.pool, signal=signum)
                 break
@@ -101,7 +99,7 @@ def rate_limit(panel, task_name, rate_limit, **kwargs):
         panel.app.tasks[task_name].rate_limit = rate_limit
     except KeyError:
         panel.logger.error("Rate limit attempt for unknown task %s",
-                           task_name, exc_info=sys.exc_info())
+                           task_name, exc_info=True)
         return {"error": "unknown task"}
 
     if not hasattr(panel.consumer.ready_queue, "refresh"):

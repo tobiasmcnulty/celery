@@ -19,8 +19,6 @@
 from __future__ import absolute_import
 
 import logging
-import sys
-import traceback
 
 from Queue import Empty
 
@@ -73,15 +71,14 @@ class Mediator(bgThread):
 
         if self._does_debug:
             self.logger.debug("Mediator: Running callback for task: %s[%s]",
-                              task.task_name, task.task_id)
+                              task.name, task.id)
 
         try:
             self.callback(task)
         except Exception as exc:
-            self.logger.error("Mediator callback raised exception %r\n%s",
-                              exc, traceback.format_exc(),
-                              exc_info=sys.exc_info(),
-                              extra={"data": {"id": task.task_id,
-                                              "name": task.task_name,
+            self.logger.error("Mediator callback raised exception %r",
+                              exc, exc_info=True,
+                              extra={"data": {"id": task.id,
+                                              "name": task.name,
                                               "hostname": task.hostname}})
     move = body   # XXX compat

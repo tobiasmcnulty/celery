@@ -109,7 +109,7 @@ class ScheduleEntry(object):
                               "options": other.options})
 
     def is_due(self):
-        """See :meth:`celery.task.base.PeriodicTask.is_due`."""
+        """See :meth:`~celery.schedule.schedule.is_due`."""
         return self.schedule.is_due(self.last_run_at)
 
     def __iter__(self):
@@ -176,10 +176,9 @@ class Scheduler(object):
             except Exception as exc:
                 self.logger.error("Message Error: %s\n%s", exc,
                                   traceback.format_stack(),
-                                  exc_info=sys.exc_info())
+                                  exc_info=True)
             else:
-                self.logger.debug("%s sent. id->%s", entry.task,
-                                                     result.task_id)
+                self.logger.debug("%s sent. id->%s", entry.task, result.id)
         return next_time_to_run
 
     def tick(self):
