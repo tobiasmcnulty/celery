@@ -64,35 +64,6 @@
     <a href="http://celery.github.com/celery/internals/reference/celery.state.html">new location for this page</a>.
 
 </div>
-    <div class="section" id="celery-state">
-<h1>celery.state<a class="headerlink" href="#celery-state" title="Permalink to this headline">¶</a></h1>
-<span class="target" id="module-celery.state"></span><dl class="function">
-<dt id="celery.state.get_current_app">
-<tt class="descclassname">celery.state.</tt><tt class="descname">get_current_app</tt><big>(</big><big>)</big><a class="headerlink" href="#celery.state.get_current_app" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="celery.state.get_current_task">
-<tt class="descclassname">celery.state.</tt><tt class="descname">get_current_task</tt><big>(</big><big>)</big><a class="headerlink" href="#celery.state.get_current_task" title="Permalink to this definition">¶</a></dt>
-<dd><p>Currently executing task.</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="celery.state.get_current_worker_task">
-<tt class="descclassname">celery.state.</tt><tt class="descname">get_current_worker_task</tt><big>(</big><big>)</big><a class="headerlink" href="#celery.state.get_current_worker_task" title="Permalink to this definition">¶</a></dt>
-<dd><p>Currently executing task, that was applied by the worker.</p>
-<p>This is used to differentiate between the actual task
-executed by the worker and any task that was called within
-a task (using <tt class="docutils literal"><span class="pre">task.__call__</span></tt> or <tt class="docutils literal"><span class="pre">task.apply</span></tt>)</p>
-</dd></dl>
-
-<dl class="function">
-<dt id="celery.state.set_default_app">
-<tt class="descclassname">celery.state.</tt><tt class="descname">set_default_app</tt><big>(</big><em>app</em><big>)</big><a class="headerlink" href="#celery.state.set_default_app" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</div>
-
 
           </div>
         </div>

@@ -64,46 +64,6 @@
     <a href="http://celery.github.com/celery/getting-started/brokers/django.html">new location for this page</a>.
 
 </div>
-    <div class="section" id="using-the-django-database">
-<span id="broker-django"></span><h1>Using the Django Database<a class="headerlink" href="#using-the-django-database" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="installation">
-<span id="broker-django-installation"></span><h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="configuration">
-<span id="broker-django-configuration"></span><h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
-<p>The database transport uses the Django <cite>DATABASE_*</cite> settings for database
-configuration values.</p>
-<ol class="arabic">
-<li><p class="first">Set your broker transport:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">BROKER_URL</span> <span class="o">=</span> <span class="s">&quot;django://&quot;</span>
-</pre></div>
-</div>
-</li>
-<li><p class="first">Add <tt class="xref py py-mod docutils literal"><span class="pre">djcelery.transport</span></tt> to <cite>INSTALLED_APPS</cite>:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;djcelery.transport&quot;</span><span class="p">,</span> <span class="p">)</span>
-</pre></div>
-</div>
-</li>
-<li><p class="first">Sync your database schema:</p>
-<div class="highlight-python"><pre>$ python manage.py syncdb</pre>
-</div>
-</li>
-</ol>
-</div>
-<div class="section" id="limitations">
-<span id="broker-django-limitations"></span><h2>Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline">¶</a></h2>
-<p>The Django database transport does not currently support:</p>
-<blockquote>
-<div><ul class="simple">
-<li>Remote control commands (celeryev, broadcast)</li>
-<li>Events, including the Django Admin monitor.</li>
-<li>Using more than a few workers (can lead to messages being executed
-multiple times).</li>
-</ul>
-</div></blockquote>
-</div>
-</div>
-
 
           </div>
         </div>

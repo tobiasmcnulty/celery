@@ -64,46 +64,6 @@
     <a href="http://celery.github.com/celery/getting-started/brokers/beanstalk.html">new location for this page</a>.
 
 </div>
-    <div class="section" id="using-beanstalk">
-<span id="broker-beanstalk"></span><h1>Using Beanstalk<a class="headerlink" href="#using-beanstalk" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="installation">
-<span id="broker-beanstalk-installation"></span><h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
-<p>For the Beanstalk support you have to install additional dependencies.
-You can install both Celery and these dependencies in one go using
-either the <a class="reference external" href="http://pypi.python.org/pypi/celery-with-beanstalk">celery-with-beanstalk</a>, or the <cite>django-celery-with-beanstalk</cite>
-bundles:</p>
-<div class="highlight-python"><pre>$ pip install -U celery-with-beanstalk</pre>
-</div>
-</div>
-<div class="section" id="configuration">
-<span id="broker-beanstalk-configuration"></span><h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
-<p>Configuration is easy, set the transport, and configure the location of
-your CouchDB database:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">BROKER_URL</span> <span class="o">=</span> <span class="s">&quot;beanstalk://localhost:11300&quot;</span>
-</pre></div>
-</div>
-<p>Where the URL is in the format of:</p>
-<div class="highlight-python"><pre>beanstalk://hostname:port</pre>
-</div>
-<p>The host name will default to <tt class="docutils literal"><span class="pre">localhost</span></tt> and the port to 11300,
-and so they are optional.</p>
-<div class="section" id="results">
-<span id="beanstalk-results-configuration"></span><h3>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h3>
-<p>Using Beanstalk to store task state and results is currently <strong>not supported</strong>.</p>
-</div>
-</div>
-<div class="section" id="limitations">
-<span id="broker-beanstalk-limitations"></span><h2>Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline">¶</a></h2>
-<p>The Beanstalk message transport does not currently support:</p>
-<blockquote>
-<div><ul class="simple">
-<li>Remote control commands (celeryctl, broadcast)</li>
-<li>Authentication</li>
-</ul>
-</div></blockquote>
-</div>
-</div>
-
 
           </div>
         </div>

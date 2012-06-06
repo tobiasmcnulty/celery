@@ -63,48 +63,6 @@
     <a href="http://celery.github.com/celery/reference/celery.security.html">new location for this page</a>.
 
 </div>
-    <div class="section" id="celery-security">
-<h1>celery.security<a class="headerlink" href="#celery-security" title="Permalink to this headline">¶</a></h1>
-<span class="target" id="module-celery.security"></span><dl class="function">
-<dt id="celery.security.disable_untrusted_serializers">
-<tt class="descclassname">celery.security.</tt><tt class="descname">disable_untrusted_serializers</tt><big>(</big><em>whitelist=None</em><big>)</big><a class="headerlink" href="#celery.security.disable_untrusted_serializers" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="function">
-<dt id="celery.security.setup_security">
-<tt class="descclassname">celery.security.</tt><tt class="descname">setup_security</tt><big>(</big><em>allowed_serializers=None</em>, <em>key=None</em>, <em>cert=None</em>, <em>store=None</em>, <em>digest='sha1'</em>, <em>serializer='json'</em><big>)</big><a class="headerlink" href="#celery.security.setup_security" title="Permalink to this definition">¶</a></dt>
-<dd><p>Setup the message-signing serializer.</p>
-<p>Disables untrusted serializers and if configured to use the <tt class="docutils literal"><span class="pre">auth</span></tt>
-serializer will register the auth serializer with the provided settings
-into the Kombu serializer registry.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
-<li><strong>allowed_serializers</strong> &#8211; List of serializer names, or content_types
-that should be exempt from being disabled.</li>
-<li><strong>key</strong> &#8211; Name of private key file to use.
-Defaults to the <a class="reference internal" href="../configuration.html#std:setting-CELERY_SECURITY_KEY"><tt class="xref std std-setting docutils literal"><span class="pre">CELERY_SECURITY_KEY</span></tt></a> setting.</li>
-<li><strong>cert</strong> &#8211; Name of certificate file to use.
-Defaults to the <a class="reference internal" href="../configuration.html#std:setting-CELERY_SECURITY_CERTIFICATE"><tt class="xref std std-setting docutils literal"><span class="pre">CELERY_SECURITY_CERTIFICATE</span></tt></a> setting.</li>
-<li><strong>store</strong> &#8211; Directory containing certificates.
-Defaults to the <a class="reference internal" href="../configuration.html#std:setting-CELERY_SECURITY_CERT_STORE"><tt class="xref std std-setting docutils literal"><span class="pre">CELERY_SECURITY_CERT_STORE</span></tt></a> setting.</li>
-<li><strong>digest</strong> &#8211; Digest algorithm used when signing messages.
-Default is <tt class="docutils literal"><span class="pre">sha1</span></tt>.</li>
-<li><strong>serializer</strong> &#8211; Serializer used to encode messages after
-they have been signed.  See <a class="reference internal" href="../configuration.html#std:setting-CELERY_TASK_SERIALIZER"><tt class="xref std std-setting docutils literal"><span class="pre">CELERY_TASK_SERIALIZER</span></tt></a> for
-the serializers supported.
-Default is <tt class="docutils literal"><span class="pre">json</span></tt>.</li>
-</ul>
-</td>
-</tr>
-</tbody>
-</table>
-</dd></dl>
-
-</div>
-
 
           </div>
         </div>

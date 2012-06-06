@@ -64,46 +64,6 @@
     <a href="http://celery.github.com/celery/getting-started/brokers/mongodb.html">new location for this page</a>.
 
 </div>
-    <div class="section" id="using-mongodb">
-<span id="broker-mongodb"></span><h1>Using MongoDB<a class="headerlink" href="#using-mongodb" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="installation">
-<span id="broker-mongodb-installation"></span><h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
-<p>For the MongoDB support you have to install additional dependencies.
-You can install both Celery and these dependencies in one go using
-either the <a class="reference external" href="http://pypi.python.org/pypi/celery-with-mongodb">celery-with-mongodb</a>, or the <cite>django-celery-with-mongodb</cite> bundles:</p>
-<div class="highlight-python"><pre>$ pip install -U celery-with-mongodb</pre>
-</div>
-</div>
-<div class="section" id="configuration">
-<span id="broker-mongodb-configuration"></span><h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
-<p>Configuration is easy, set the transport, and configure the location of
-your MongoDB database:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">BROKER_URL</span> <span class="o">=</span> <span class="s">&quot;mongodb://localhost:27017/database_name&quot;</span>
-</pre></div>
-</div>
-<p>Where the URL is in the format of:</p>
-<div class="highlight-python"><pre>mongodb://userid:password@hostname:port/database_name</pre>
-</div>
-<p>The host name will default to <tt class="docutils literal"><span class="pre">localhost</span></tt> and the port to 27017,
-and so they are optional.  userid and password are also optional,
-but needed if your MongoDB server requires authentication.</p>
-<div class="section" id="results">
-<span id="mongodb-results-configuration"></span><h3>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h3>
-<p>If you also want to store the state and return values of tasks in MongoDB,
-you should see <a class="reference internal" href="../../configuration.html#conf-mongodb-result-backend"><em>MongoDB backend settings</em></a>.</p>
-</div>
-</div>
-<div class="section" id="limitations">
-<span id="broker-mongodb-limitations"></span><h2>Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline">¶</a></h2>
-<p>The mongodb message transport currently does not support:</p>
-<blockquote>
-<div><ul class="simple">
-<li>Remote control commands (celeryctl, broadcast)</li>
-</ul>
-</div></blockquote>
-</div>
-</div>
-
 
           </div>
         </div>

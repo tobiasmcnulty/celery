@@ -64,58 +64,6 @@
     <a href="http://celery.github.com/celery/internals/reference/celery.backends.cassandra.html">new location for this page</a>.
 
 </div>
-    <div class="section" id="celery-backends-cassandra">
-<h1>celery.backends.cassandra<a class="headerlink" href="#celery-backends-cassandra" title="Permalink to this headline">¶</a></h1>
-<span class="target" id="module-celery.backends.cassandra"></span><p>celery.backends.cassandra</p>
-<dl class="class">
-<dt id="celery.backends.cassandra.CassandraBackend">
-<em class="property">class </em><tt class="descclassname">celery.backends.cassandra.</tt><tt class="descname">CassandraBackend</tt><big>(</big><em>servers=None</em>, <em>keyspace=None</em>, <em>column_family=None</em>, <em>cassandra_options=None</em>, <em>detailed_mode=False</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#celery.backends.cassandra.CassandraBackend" title="Permalink to this definition">¶</a></dt>
-<dd><p>Highly fault tolerant Cassandra backend.</p>
-<dl class="attribute">
-<dt id="celery.backends.cassandra.CassandraBackend.servers">
-<tt class="descname">servers</tt><a class="headerlink" href="#celery.backends.cassandra.CassandraBackend.servers" title="Permalink to this definition">¶</a></dt>
-<dd><p>List of Cassandra servers with format: &#8220;hostname:port&#8221;.</p>
-</dd></dl>
-
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name" colspan="2">Raises <a class="reference internal" href="../../reference/celery.exceptions.html#celery.exceptions.ImproperlyConfigured" title="celery.exceptions.ImproperlyConfigured">celery.exceptions.ImproperlyConfigured</a>:</th></tr>
-<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">if
-module <tt class="xref py py-mod docutils literal"><span class="pre">pycassa</span></tt> is not available.</td>
-</tr>
-</tbody>
-</table>
-<dl class="attribute">
-<dt id="celery.backends.cassandra.CassandraBackend.column_family">
-<tt class="descname">column_family</tt><em class="property"> = None</em><a class="headerlink" href="#celery.backends.cassandra.CassandraBackend.column_family" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="celery.backends.cassandra.CassandraBackend.detailed_mode">
-<tt class="descname">detailed_mode</tt><em class="property"> = False</em><a class="headerlink" href="#celery.backends.cassandra.CassandraBackend.detailed_mode" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt id="celery.backends.cassandra.CassandraBackend.keyspace">
-<tt class="descname">keyspace</tt><em class="property"> = None</em><a class="headerlink" href="#celery.backends.cassandra.CassandraBackend.keyspace" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="celery.backends.cassandra.CassandraBackend.process_cleanup">
-<tt class="descname">process_cleanup</tt><big>(</big><big>)</big><a class="headerlink" href="#celery.backends.cassandra.CassandraBackend.process_cleanup" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="attribute">
-<dt>
-<tt class="descname">servers</tt><em class="property"> = []</em></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-</div>
-
 
           </div>
         </div>

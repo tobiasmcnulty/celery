@@ -64,45 +64,6 @@
     <a href="http://celery.github.com/celery/getting-started/brokers/couchdb.html">new location for this page</a>.
 
 </div>
-    <div class="section" id="using-couchdb">
-<span id="broker-couchdb"></span><h1>Using CouchDB<a class="headerlink" href="#using-couchdb" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="installation">
-<span id="broker-couchdb-installation"></span><h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
-<p>For the CouchDB support you have to install additional dependencies.
-You can install both Celery and these dependencies in one go using
-either the <a class="reference external" href="http://pypi.python.org/pypi/celery-with-couchdb">celery-with-couchdb</a>, or the <cite>django-celery-with-couchdb</cite> bundles:</p>
-<div class="highlight-python"><pre>$ pip install -U celery-with-couchdb</pre>
-</div>
-</div>
-<div class="section" id="configuration">
-<span id="broker-couchdb-configuration"></span><h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
-<p>Configuration is easy, set the transport, and configure the location of
-your CouchDB database:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">BROKER_URL</span> <span class="o">=</span> <span class="s">&quot;couchdb://localhost:5984/database_name&quot;</span>
-</pre></div>
-</div>
-<p>Where the URL is in the format of:</p>
-<div class="highlight-python"><pre>couchdb://userid:password@hostname:port/database_name</pre>
-</div>
-<p>The host name will default to <tt class="docutils literal"><span class="pre">localhost</span></tt> and the port to 5984,
-and so they are optional.  userid and password are also optional,
-but needed if your CouchDB server requires authentication.</p>
-<div class="section" id="results">
-<span id="couchdb-results-configuration"></span><h3>Results<a class="headerlink" href="#results" title="Permalink to this headline">¶</a></h3>
-<p>Storing task state and results in CouchDB is currently <strong>not supported</strong>.</p>
-</div>
-</div>
-<div class="section" id="limitations">
-<span id="broker-couchdb-limitations"></span><h2>Limitations<a class="headerlink" href="#limitations" title="Permalink to this headline">¶</a></h2>
-<p>The Beanstalk message transport does not currently support:</p>
-<blockquote>
-<div><ul class="simple">
-<li>Remote control commands (celeryctl, broadcast)</li>
-</ul>
-</div></blockquote>
-</div>
-</div>
-
 
           </div>
         </div>

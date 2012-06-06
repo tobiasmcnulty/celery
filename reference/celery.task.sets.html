@@ -63,54 +63,6 @@
     <a href="http://celery.github.com/celery/reference/celery.task.sets.html">new location for this page</a>.
 
 </div>
-    <div class="section" id="celery-task-sets">
-<h1>celery.task.sets<a class="headerlink" href="#celery-task-sets" title="Permalink to this headline">¶</a></h1>
-<span class="target" id="module-celery.task.sets"></span><dl class="class">
-<dt id="celery.task.sets.TaskSet">
-<em class="property">class </em><tt class="descclassname">celery.task.sets.</tt><tt class="descname">TaskSet</tt><big>(</big><em>tasks=None</em>, <em>app=None</em>, <em>Publisher=None</em><big>)</big><a class="headerlink" href="#celery.task.sets.TaskSet" title="Permalink to this definition">¶</a></dt>
-<dd><p>A task containing several subtasks, making it possible
-to track how many, or when all of the tasks have been completed.</p>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tasks</strong> &#8211; A list of <a class="reference internal" href="celery.html#subtask" title="subtask"><tt class="xref py py-class docutils literal"><span class="pre">subtask</span></tt></a> instances.</td>
-</tr>
-</tbody>
-</table>
-<p>Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">urls</span> <span class="o">=</span> <span class="p">(</span><span class="s">&quot;http://cnn.com/rss&quot;</span><span class="p">,</span> <span class="s">&quot;http://bbc.co.uk/rss&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">s</span> <span class="o">=</span> <span class="n">TaskSet</span><span class="p">(</span><span class="n">refresh_feed</span><span class="o">.</span><span class="n">s</span><span class="p">(</span><span class="n">url</span><span class="p">)</span> <span class="k">for</span> <span class="n">url</span> <span class="ow">in</span> <span class="n">urls</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">taskset_result</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">apply_async</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">list_of_return_values</span> <span class="o">=</span> <span class="n">taskset_result</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>  <span class="c"># *expensive*</span>
-</pre></div>
-</div>
-<dl class="attribute">
-<dt id="celery.task.sets.TaskSet.app">
-<tt class="descname">app</tt><em class="property"> = None</em><a class="headerlink" href="#celery.task.sets.TaskSet.app" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="celery.task.sets.TaskSet.apply">
-<tt class="descname">apply</tt><big>(</big><em>taskset_id=None</em><big>)</big><a class="headerlink" href="#celery.task.sets.TaskSet.apply" title="Permalink to this definition">¶</a></dt>
-<dd><p>Applies the TaskSet locally by blocking until all tasks return.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="celery.task.sets.TaskSet.apply_async">
-<tt class="descname">apply_async</tt><big>(</big><em>connection=None</em>, <em>connect_timeout=None</em>, <em>publisher=None</em>, <em>taskset_id=None</em><big>)</big><a class="headerlink" href="#celery.task.sets.TaskSet.apply_async" title="Permalink to this definition">¶</a></dt>
-<dd><p>Apply TaskSet.</p>
-</dd></dl>
-
-<dl class="attribute">
-<dt id="celery.task.sets.TaskSet.tasks">
-<tt class="descname">tasks</tt><a class="headerlink" href="#celery.task.sets.TaskSet.tasks" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-</div>
-
 
           </div>
         </div>

@@ -64,69 +64,6 @@
     <a href="http://celery.github.com/celery/internals/reference/celery.security.certificate.html">new location for this page</a>.
 
 </div>
-    <div class="section" id="celery-security-certificate">
-<h1>celery.security.certificate<a class="headerlink" href="#celery-security-certificate" title="Permalink to this headline">¶</a></h1>
-<span class="target" id="module-celery.security.certificate"></span><dl class="class">
-<dt id="celery.security.certificate.CertStore">
-<em class="property">class </em><tt class="descclassname">celery.security.certificate.</tt><tt class="descname">CertStore</tt><a class="headerlink" href="#celery.security.certificate.CertStore" title="Permalink to this definition">¶</a></dt>
-<dd><p>Base class for certificate stores</p>
-<dl class="method">
-<dt id="celery.security.certificate.CertStore.add_cert">
-<tt class="descname">add_cert</tt><big>(</big><em>cert</em><big>)</big><a class="headerlink" href="#celery.security.certificate.CertStore.add_cert" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="celery.security.certificate.CertStore.itercerts">
-<tt class="descname">itercerts</tt><big>(</big><big>)</big><a class="headerlink" href="#celery.security.certificate.CertStore.itercerts" title="Permalink to this definition">¶</a></dt>
-<dd><p>an iterator over the certificates</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="celery.security.certificate.Certificate">
-<em class="property">class </em><tt class="descclassname">celery.security.certificate.</tt><tt class="descname">Certificate</tt><big>(</big><em>cert</em><big>)</big><a class="headerlink" href="#celery.security.certificate.Certificate" title="Permalink to this definition">¶</a></dt>
-<dd><p>X.509 certificate.</p>
-<dl class="method">
-<dt id="celery.security.certificate.Certificate.get_id">
-<tt class="descname">get_id</tt><big>(</big><big>)</big><a class="headerlink" href="#celery.security.certificate.Certificate.get_id" title="Permalink to this definition">¶</a></dt>
-<dd><p>Serial number/issuer pair uniquely identifies a certificate</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="celery.security.certificate.Certificate.get_issuer">
-<tt class="descname">get_issuer</tt><big>(</big><big>)</big><a class="headerlink" href="#celery.security.certificate.Certificate.get_issuer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns issuer (CA) as a string</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="celery.security.certificate.Certificate.get_serial_number">
-<tt class="descname">get_serial_number</tt><big>(</big><big>)</big><a class="headerlink" href="#celery.security.certificate.Certificate.get_serial_number" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns the certificates serial number.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="celery.security.certificate.Certificate.has_expired">
-<tt class="descname">has_expired</tt><big>(</big><big>)</big><a class="headerlink" href="#celery.security.certificate.Certificate.has_expired" title="Permalink to this definition">¶</a></dt>
-<dd><p>Check if the certificate has expired.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="celery.security.certificate.Certificate.verify">
-<tt class="descname">verify</tt><big>(</big><em>data</em>, <em>signature</em>, <em>digest</em><big>)</big><a class="headerlink" href="#celery.security.certificate.Certificate.verify" title="Permalink to this definition">¶</a></dt>
-<dd><p>Verifies the signature for string containing data.</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="class">
-<dt id="celery.security.certificate.FSCertStore">
-<em class="property">class </em><tt class="descclassname">celery.security.certificate.</tt><tt class="descname">FSCertStore</tt><big>(</big><em>path</em><big>)</big><a class="headerlink" href="#celery.security.certificate.FSCertStore" title="Permalink to this definition">¶</a></dt>
-<dd><p>File system certificate store</p>
-</dd></dl>
-
-</div>
-
 
           </div>
         </div>
