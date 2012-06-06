@@ -58,70 +58,129 @@
             
 <div class="deck">
 
-    
-        <p class="developmentversion">
-        This document is for Celery's development version, which can be
-        significantly different from previous releases. Get old docs here:
-
-        <a href="http://docs.celeryproject.org/en/latest/internals/reference/celery.worker.hub.html">2.5</a>.
-        </p>
-        
+    <h2>Development documentation has MOVED!</h2>
+    <p>
+    Go to the
+    <a href="http://celery.github.com/celery/internals/reference/celery.worker.hub.html">new location for this page</a>.
 
 </div>
     <div class="section" id="celery-worker-hub">
 <h1>celery.worker.hub<a class="headerlink" href="#celery-worker-hub" title="Permalink to this headline">¶</a></h1>
 <span class="target" id="module-celery.worker.hub"></span><dl class="class">
 <dt id="celery.worker.hub.BoundedSemaphore">
-<em class="property">class </em><tt class="descclassname">celery.worker.hub.</tt><tt class="descname">BoundedSemaphore</tt><big>(</big><em>value=1</em><big>)</big><a class="headerlink" href="#celery.worker.hub.BoundedSemaphore" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="method">
+<em class="property">class </em><tt class="descclassname">celery.worker.hub.</tt><tt class="descname">BoundedSemaphore</tt><big>(</big><em>value</em><big>)</big><a class="headerlink" href="#celery.worker.hub.BoundedSemaphore" title="Permalink to this definition">¶</a></dt>
+<dd><p>Asynchronous Bounded Semaphore.</p>
+<p>Bounded means that the value will stay within the specified
+range even if it is released more times than it was acquired.</p>
+<p>This type is <em>not thread safe</em>.</p>
+<p>Example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span> <span class="o">=</span> <span class="n">BoundedSemaphore</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">def</span> <span class="nf">callback</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">print</span><span class="p">(</span><span class="s">&quot;HELLO </span><span class="si">%r</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">i</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">acquire</span><span class="p">(</span><span class="n">callback</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="go">HELLO 1</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">acquire</span><span class="p">(</span><span class="n">callback</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="go">HELLO 2</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">acquire</span><span class="p">(</span><span class="n">callback</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">_waiters</span>   <span class="c"># private, do not access directly</span>
+<span class="go">[(callback, 3)]</span>
+</pre></div>
+</div>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">x</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+<span class="go">HELLO 3</span>
+</pre></div>
+</div>
+<dl class="method">
 <dt id="celery.worker.hub.BoundedSemaphore.acquire">
-<tt class="descname">acquire</tt><big>(</big><em>callback</em>, <em>*partial_args</em>, <em>**partial_kwargs</em><big>)</big><a class="headerlink" href="#celery.worker.hub.BoundedSemaphore.acquire" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<tt class="descname">acquire</tt><big>(</big><em>callback</em>, <em>*partial_args</em><big>)</big><a class="headerlink" href="#celery.worker.hub.BoundedSemaphore.acquire" title="Permalink to this definition">¶</a></dt>
+<dd><p>Acquire semaphore, applying <tt class="docutils literal"><span class="pre">callback</span></tt> when
+the semaphore is ready.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>callback</strong> &#8211; The callback to apply.</li>
+<li><strong>*partial_args</strong> &#8211; <p>partial arguments to callback.</p>
+</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="celery.worker.hub.BoundedSemaphore.clear">
 <tt class="descname">clear</tt><big>(</big><big>)</big><a class="headerlink" href="#celery.worker.hub.BoundedSemaphore.clear" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Reset the sempahore, including wiping out any waiting callbacks.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="celery.worker.hub.BoundedSemaphore.grow">
-<tt class="descname">grow</tt><big>(</big><big>)</big><a class="headerlink" href="#celery.worker.hub.BoundedSemaphore.grow" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<tt class="descname">grow</tt><big>(</big><em>n=1</em><big>)</big><a class="headerlink" href="#celery.worker.hub.BoundedSemaphore.grow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change the size of the semaphore to hold more values.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="celery.worker.hub.BoundedSemaphore.release">
 <tt class="descname">release</tt><big>(</big><big>)</big><a class="headerlink" href="#celery.worker.hub.BoundedSemaphore.release" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Release semaphore.</p>
+<p>This will apply any waiting callbacks from previous
+calls to <a class="reference internal" href="#celery.worker.hub.BoundedSemaphore.acquire" title="celery.worker.hub.BoundedSemaphore.acquire"><tt class="xref py py-meth docutils literal"><span class="pre">acquire()</span></tt></a> done when the semaphore was busy.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="celery.worker.hub.BoundedSemaphore.shrink">
-<tt class="descname">shrink</tt><big>(</big><big>)</big><a class="headerlink" href="#celery.worker.hub.BoundedSemaphore.shrink" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<tt class="descname">shrink</tt><big>(</big><em>n=1</em><big>)</big><a class="headerlink" href="#celery.worker.hub.BoundedSemaphore.shrink" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change the size of the semaphore to hold less values.</p>
+</dd></dl>
 
 </dd></dl>
 
 <dl class="class">
 <dt id="celery.worker.hub.DummyLock">
 <em class="property">class </em><tt class="descclassname">celery.worker.hub.</tt><tt class="descname">DummyLock</tt><a class="headerlink" href="#celery.worker.hub.DummyLock" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Pretending to be a lock.</p>
+</dd></dl>
 
 <dl class="class">
 <dt id="celery.worker.hub.Hub">
 <em class="property">class </em><tt class="descclassname">celery.worker.hub.</tt><tt class="descname">Hub</tt><big>(</big><em>timer=None</em><big>)</big><a class="headerlink" href="#celery.worker.hub.Hub" title="Permalink to this definition">¶</a></dt>
-<dd><dl class="attribute">
+<dd><p>Event loop object.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>timer</strong> &#8211; Specify custom <a class="reference internal" href="celery.utils.timer2.html#celery.utils.timer2.Schedule" title="celery.utils.timer2.Schedule"><tt class="xref py py-class docutils literal"><span class="pre">Schedule</span></tt></a>.</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
 <dt id="celery.worker.hub.Hub.ERR">
 <tt class="descname">ERR</tt><em class="property"> = 24</em><a class="headerlink" href="#celery.worker.hub.Hub.ERR" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Flag set on error, and the fd should be read from asap.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="celery.worker.hub.Hub.READ">
 <tt class="descname">READ</tt><em class="property"> = 1</em><a class="headerlink" href="#celery.worker.hub.Hub.READ" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Flag set if reading from an fd will not block.</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="celery.worker.hub.Hub.WRITE">
 <tt class="descname">WRITE</tt><em class="property"> = 4</em><a class="headerlink" href="#celery.worker.hub.Hub.WRITE" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Flag set if writing to an fd will not block.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="celery.worker.hub.Hub.add">
@@ -140,7 +199,7 @@
 
 <dl class="method">
 <dt id="celery.worker.hub.Hub.close">
-<tt class="descname">close</tt><big>(</big><big>)</big><a class="headerlink" href="#celery.worker.hub.Hub.close" title="Permalink to this definition">¶</a></dt>
+<tt class="descname">close</tt><big>(</big><em>*args</em><big>)</big><a class="headerlink" href="#celery.worker.hub.Hub.close" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="method">
@@ -152,6 +211,27 @@
 <dt id="celery.worker.hub.Hub.init">
 <tt class="descname">init</tt><big>(</big><big>)</big><a class="headerlink" href="#celery.worker.hub.Hub.init" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+<dl class="attribute">
+<dt id="celery.worker.hub.Hub.on_close">
+<tt class="descname">on_close</tt><em class="property"> = None</em><a class="headerlink" href="#celery.worker.hub.Hub.on_close" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of callbacks to be called when the loop is exiting,
+applied with the hub instance as sole argument.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="celery.worker.hub.Hub.on_init">
+<tt class="descname">on_init</tt><em class="property"> = None</em><a class="headerlink" href="#celery.worker.hub.Hub.on_init" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of callbacks to be called when the loop is initialized,
+applied with the hub instance as sole argument.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="celery.worker.hub.Hub.on_task">
+<tt class="descname">on_task</tt><em class="property"> = None</em><a class="headerlink" href="#celery.worker.hub.Hub.on_task" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of callbacks to be called when a task is received.
+Takes no arguments.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="celery.worker.hub.Hub.remove">
@@ -166,12 +246,14 @@
 <dl class="method">
 <dt id="celery.worker.hub.Hub.start">
 <tt class="descname">start</tt><big>(</big><big>)</big><a class="headerlink" href="#celery.worker.hub.Hub.start" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Called by StartStopComponent at worker startup.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="celery.worker.hub.Hub.stop">
 <tt class="descname">stop</tt><big>(</big><big>)</big><a class="headerlink" href="#celery.worker.hub.Hub.stop" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Called by StartStopComponent at worker shutdown.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="celery.worker.hub.Hub.update_readers">
