@@ -1,0 +1,395 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Introduction to Task Queues &mdash; Celery 2.6.0rc5 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/celery.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/issuetracker.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '2.6.0rc5',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="copyright" title="Copyright" href="../copyright.html" />
+    <link rel="top" title="Celery 2.6.0rc5 documentation" href="../index.html" />
+    <link rel="up" title="Getting Started" href="index.html" />
+    <link rel="next" title="Introduction" href="introduction.html" />
+    <link rel="prev" title="Getting Started" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="introduction.html" title="Introduction"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Getting Started"
+             accesskey="P">previous</a> |</li>
+        <li><a href="../index.html">Celery 2.6.0rc5 documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Getting Started</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+<div class="deck">
+
+    
+        <p class="developmentversion">
+        This document is for Celery's development version, which can be
+        significantly different from previous releases. Get old docs here:
+
+        <a href="http://docs.celeryproject.org/en/latest/getting-started/intro.html">2.5</a>.
+        </p>
+        
+
+</div>
+    <div class="section" id="introduction-to-task-queues">
+<h1>Introduction to Task Queues<a class="headerlink" href="#introduction-to-task-queues" title="Permalink to this headline">¶</a></h1>
+<div class="contents local topic" id="contents">
+<ul class="simple">
+<li><a class="reference internal" href="#what-are-task-queues" id="id1">What are Task Queues?</a></li>
+<li><a class="reference internal" href="#what-do-i-need" id="id2">What do I need?</a></li>
+<li><a class="reference internal" href="#celery-is" id="id3">Celery is…</a></li>
+</ul>
+</div>
+<div class="section" id="what-are-task-queues">
+<h2><a class="toc-backref" href="#id1">What are Task Queues?</a><a class="headerlink" href="#what-are-task-queues" title="Permalink to this headline">¶</a></h2>
+<p>HELLO</p>
+</div>
+<div class="section" id="what-do-i-need">
+<h2><a class="toc-backref" href="#id2">What do I need?</a><a class="headerlink" href="#what-do-i-need" title="Permalink to this headline">¶</a></h2>
+<div class="sidebar">
+<p class="first sidebar-title">Version Requirements</p>
+<p class="sidebar-subtitle">Celery version 2.6 runs on</p>
+<ul class="simple">
+<li>Python ❨2.5, 2.6, 2.7, 3.2, 3.3❩</li>
+<li>PyPy ❨1.8, 1.9❩</li>
+<li>Jython ❨2.5, 2.7❩.</li>
+</ul>
+<p class="last">This is the last version to support Python 2.5,
+and from the next version Python 2.6 or newer is required.
+The last version to support Python 2.4 was Celery series 2.2.</p>
+</div>
+<p><em>Celery</em> requires a message broker to send and receive messages,
+but this term has been stretched to include everything from
+your fridge to financial-grade messaging systems.</p>
+<p><em>Celery</em> can run on a single machine, on multiple machines, or even
+across datacenters.</p>
+</div>
+<div class="section" id="celery-is">
+<h2><a class="toc-backref" href="#id3">Celery is…</a><a class="headerlink" href="#celery-is" title="Permalink to this headline">¶</a></h2>
+<div class="topic">
+<p class="topic-title first">”</p>
+<ul>
+<li><p class="first"><strong>Simple</strong></p>
+<blockquote>
+<div><p>Celery is easy to use and maintain, and does <em>not need configuration files</em>.</p>
+<p>It has an active, friendly community you can talk to for support,
+including a <a class="reference internal" href="resources.html#mailing-list"><em>mailing-list</em></a> and and <a class="reference internal" href="resources.html#irc-channel"><em>IRC
+channel</em></a>.</p>
+<p>Here&#8217;s one of the simplest applications you can make:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">celery</span> <span class="kn">import</span> <span class="n">Celery</span>
+
+<span class="n">celery</span> <span class="o">=</span> <span class="n">Celery</span><span class="p">(</span><span class="s">&#39;hello&#39;</span><span class="p">,</span> <span class="n">broker</span><span class="o">=</span><span class="s">&#39;amqp://guest@localhost//&#39;</span><span class="p">)</span>
+
+<span class="nd">@celery.task</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">hello</span><span class="p">():</span>
+    <span class="k">return</span> <span class="s">&#39;hello world&#39;</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first"><strong>Highly Available</strong></p>
+<blockquote>
+<div><p>Workers and clients will automatically retry in the event
+of connection loss or failure, and some brokers support
+HA in way of <em>Master/Master</em> or <em>Master/Slave</em> replication.</p>
+</div></blockquote>
+</li>
+<li><p class="first"><strong>Fast</strong></p>
+<blockquote>
+<div><p>A single Celery process can process millions of tasks a minute,
+with sub-millisecond round-trip latency (using RabbitMQ,
+py-librabbitmq, and optimized settings).</p>
+</div></blockquote>
+</li>
+<li><p class="first"><strong>Flexible</strong></p>
+<blockquote>
+<div><p>Almost every part of <em>Celery</em> can be extended or used on its own,
+Custom pool implementations, serializers, compression schemes, logging,
+schedulers, consumers, producers, autoscalers, broker transorts and much more.</p>
+</div></blockquote>
+</li>
+</ul>
+</div>
+<div class="topic">
+<p class="topic-title first">It supports</p>
+<table class="hlist"><tr><td><ul>
+<li><p class="first"><strong>Brokers</strong></p>
+<blockquote>
+<div><ul class="simple">
+<li><a class="reference internal" href="brokers/rabbitmq.html#broker-rabbitmq"><em>RabbitMQ</em></a></li>
+<li><a class="reference internal" href="brokers/redis.html#broker-redis"><em>Redis</em></a>,</li>
+<li><a class="reference internal" href="brokers/mongodb.html#broker-mongodb"><em>MongoDB</em></a></li>
+<li><a class="reference internal" href="brokers/beanstalk.html#broker-beanstalk"><em>Beanstalk</em></a></li>
+<li><a class="reference internal" href="brokers/couchdb.html#broker-couchdb"><em>CouchDB</em></a></li>
+<li><a class="reference internal" href="brokers/sqlalchemy.html#broker-sqlalchemy"><em>SQLAlchemy</em></a></li>
+<li><a class="reference internal" href="brokers/django.html#broker-django"><em>Django ORM</em></a></li>
+<li><a class="reference internal" href="brokers/sqs.html#broker-sqs"><em>Amazon SQS</em></a></li>
+<li>and more…</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first"><strong>Concurrency</strong></p>
+<blockquote>
+<div><ul class="simple">
+<li>multiprocessing,</li>
+<li><a class="reference external" href="http://eventlet.net/">Eventlet</a>, <a class="reference external" href="http://gevent.org/">gevent</a></li>
+<li>threads</li>
+<li>single</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first"><strong>Result Stores</strong></p>
+<blockquote>
+<div><ul class="simple">
+<li>AMQP</li>
+<li>Redis</li>
+<li>memcached</li>
+<li>MongoDB</li>
+<li>SQLAlchemy</li>
+<li>Django ORM</li>
+<li>Apache Cassandra</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</td><td><ul>
+<li><p class="first"><strong>Serialization</strong></p>
+<blockquote>
+<div><ul class="simple">
+<li><em>pickle</em>, <em>json</em>, <em>yaml</em>, <em>msgpack</em>.</li>
+<li>Fine-grained serialization settings.</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first"><strong>Compression</strong></p>
+<blockquote>
+<div><ul class="simple">
+<li><em>zlib</em>, <em>bzip2</em>, or uncompressed.</li>
+</ul>
+</div></blockquote>
+</li>
+<li><p class="first"><strong>Crypto</strong></p>
+<blockquote>
+<div><ul class="simple">
+<li>Cryptographic message signing.</li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</td></tr></table>
+</div>
+<div class="topic">
+<p class="topic-title first">Features</p>
+<table class="hlist"><tr><td><ul>
+<li><p class="first"><strong>Monitoring</strong></p>
+<blockquote>
+<div><p>The stream of monitoring events emitted by the worker are used
+by built-in and external tools to tell you what your cluster
+is doing in real-time.</p>
+<p><a class="reference internal" href="../userguide/monitoring.html#guide-monitoring"><em>Read more…</em></a>.</p>
+</div></blockquote>
+</li>
+<li><p class="first"><strong>Time Limits &amp; Rate Limits</strong></p>
+<blockquote>
+<div><p>You can control how many tasks can be executed per second/minute/hour,
+or how long a task can be allowed to run, and this can be set as
+a default, for a specific worker or individually for each task type.</p>
+<p><a class="reference internal" href="../userguide/workers.html#worker-time-limits"><em>Read more…</em></a>.</p>
+</div></blockquote>
+</li>
+<li><p class="first"><strong>Autoreloading</strong></p>
+<blockquote>
+<div><p>While in development workers can be configured to automatically reload source
+code as it changes.</p>
+<p><a class="reference internal" href="../userguide/workers.html#worker-autoreloading"><em>Read more…</em></a>.</p>
+</div></blockquote>
+</li>
+</ul>
+</td><td><ul>
+<li><p class="first"><strong>Autoscaling</strong></p>
+<blockquote>
+<div><p>Dynamically resizing the worker pool depending on load,
+or custom metrics specified by the user, used to limit
+memory usage in shared hosting/cloud environment or to
+enforce a given quality of service.</p>
+<p><a class="reference internal" href="../userguide/workers.html#worker-autoscaling"><em>Read more…</em></a>.</p>
+</div></blockquote>
+</li>
+<li><p class="first"><strong>Resource Leak Protection</strong></p>
+<blockquote>
+<div><p>The <em class="xref std std-option">--maxtasksperchild</em> option is used for user tasks
+leaking resources, like memory or file descriptors, that
+are simply out of your control.</p>
+<p><a class="reference internal" href="../userguide/workers.html#worker-maxtasksperchild"><em>Read more…</em></a>.</p>
+</div></blockquote>
+</li>
+<li><p class="first"><strong>User Components</strong></p>
+<blockquote>
+<div><p>Each worker component can be customized, and additional components
+can be defined by the user.  The worker is built up using &#8220;boot steps&#8221; — a
+dependency graph enabling fine grained control of the worker&#8217;s
+internals.</p>
+</div></blockquote>
+</li>
+</ul>
+</td></tr></table>
+</div>
+<div class="topic">
+<p class="topic-title first">I want to ⟶</p>
+<table class="hlist"><tr><td><ul class="simple">
+<li><a class="reference internal" href="../userguide/tasks.html#task-states"><em>get the return value of a task</em></a></li>
+<li><a class="reference internal" href="../userguide/tasks.html#task-logging"><em>use logging from my task</em></a></li>
+<li><a class="reference internal" href="../userguide/tasks.html#task-best-practices"><em>learn about best practices</em></a></li>
+<li><a class="reference internal" href="../userguide/tasks.html#task-custom-classes"><em>create a custom task base class</em></a></li>
+<li><a class="reference internal" href="../userguide/canvas.html#chords"><em>add a callback to a group of tasks</em></a></li>
+<li><a class="reference internal" href="../userguide/canvas.html#chunking"><em>split a task into several chunks</em></a></li>
+<li><a class="reference internal" href="../userguide/optimizing.html#guide-optimizing"><em>optimize the worker</em></a></li>
+<li><a class="reference internal" href="../userguide/tasks.html#task-builtin-states"><em>see a list of built-in task states</em></a></li>
+<li><a class="reference internal" href="../userguide/tasks.html#custom-states"><em>create custom task states</em></a></li>
+<li><a class="reference internal" href="../userguide/tasks.html#task-names"><em>set a custom task name</em></a></li>
+<li><a class="reference internal" href="../userguide/tasks.html#task-track-started"><em>track when a task starts</em></a></li>
+<li><a class="reference internal" href="../userguide/tasks.html#task-retry"><em>retry a task when it fails</em></a></li>
+<li><a class="reference internal" href="../userguide/tasks.html#task-request-info"><em>get the id of the current task</em></a></li>
+</ul>
+</td><td><ul class="simple">
+<li><a class="reference internal" href="../userguide/tasks.html#task-request-info"><em>know what queue a task was delivered to</em></a></li>
+<li><a class="reference internal" href="../userguide/monitoring.html#monitoring-celeryctl"><em>see a list of running workers</em></a></li>
+<li><a class="reference internal" href="../userguide/monitoring.html#monitoring-celeryctl"><em>purge all messages</em></a></li>
+<li><a class="reference internal" href="../userguide/monitoring.html#monitoring-celeryctl"><em>inspect what the workers are doing</em></a></li>
+<li><a class="reference internal" href="../userguide/monitoring.html#monitoring-celeryctl"><em>see what tasks a worker has registerd</em></a></li>
+<li><a class="reference internal" href="../userguide/monitoring.html#monitoring-celeryctl"><em>migrate tasks to a new broker</em></a></li>
+<li><a class="reference internal" href="../userguide/monitoring.html#event-reference"><em>see a list of event message types</em></a></li>
+<li><a class="reference internal" href="../contributing.html#contributing"><em>contribute to Celery</em></a></li>
+<li><a class="reference internal" href="../configuration.html#configuration"><em>learn about available configuration settings</em></a></li>
+<li><a class="reference internal" href="../configuration.html#conf-error-mails"><em>receive email when a task fails</em></a></li>
+<li><a class="reference internal" href="../community.html#res-using-celery"><em>get a list of people and companies using Celery</em></a></li>
+<li><a class="reference internal" href="../userguide/workers.html#worker-custom-control-commands"><em>write my own remote control command</em></a></li>
+<li>change worker queues at runtime</li>
+</ul>
+</td></tr></table>
+</div>
+<div class="topic">
+<p class="topic-title first">Jump to ⟶</p>
+<table class="hlist"><tr><td><ul class="simple">
+<li><a class="reference internal" href="brokers/index.html#brokers"><em>Brokers</em></a></li>
+<li><a class="reference internal" href="../userguide/tasks.html#guide-tasks"><em>Tasks</em></a></li>
+<li><a class="reference internal" href="../userguide/calling.html#guide-calling"><em>Calling</em></a></li>
+<li><a class="reference internal" href="../userguide/workers.html#guide-workers"><em>Workers</em></a></li>
+</ul>
+</td><td><ul class="simple">
+<li><a class="reference internal" href="../userguide/monitoring.html#guide-monitoring"><em>Monitoring</em></a></li>
+<li><a class="reference internal" href="../userguide/optimizing.html#guide-optimizing"><em>Optimizing</em></a></li>
+<li><a class="reference internal" href="../userguide/security.html#guide-security"><em>Security</em></a></li>
+</ul>
+</td><td><ul class="simple">
+<li><a class="reference internal" href="../userguide/routing.html#guide-routing"><em>Routing</em></a></li>
+<li><a class="reference internal" href="../configuration.html#configuration"><em>Configuration Reference</em></a></li>
+<li><a class="reference internal" href="../django/index.html#django"><em>Django</em></a></li>
+</ul>
+</td><td><ul class="simple">
+<li><a class="reference internal" href="../contributing.html#contributing"><em>Contributing</em></a></li>
+<li><a class="reference internal" href="../userguide/signals.html#signals"><em>Signals</em></a></li>
+<li><a class="reference internal" href="../faq.html#faq"><em>FAQ</em></a></li>
+</ul>
+</td></tr></table>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper"><p class="logo"><a href="../index.html">
+  <img class="logo" src="http://cloud.github.com/downloads/celery/celery/celery_128.png" alt="Logo"/>
+</a></p>
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Getting Started</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="introduction.html"
+                        title="next chapter">Introduction</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="../_sources/getting-started/intro.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="introduction.html" title="Introduction"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Getting Started"
+             >previous</a> |</li>
+        <li><a href="../index.html">Celery 2.6.0rc5 documentation</a> &raquo;</li>
+          <li><a href="index.html" >Getting Started</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; <a href="../copyright.html">Copyright</a> 2009-2012, Ask Solem &amp; Contributors.
+    </div>
+  </body>
+</html>

@@ -4,18 +4,21 @@
  What's new in Celery 2.6
 ==========================
 
-Celery aims to be a flexible and reliable, best-of-breed solution
-to process vast amounts of messages in a distributed fashion, while
-providing operations with the tools to maintain such a system.
+Celery is a simple, flexible and reliable distributed system to
+process vast amounts of messages, while providing operations with
+the tools required to maintain such a system.
+
+It's a task queue with focus on real-time processing, while also
+supporting task scheduling.
 
 Celery has a large and diverse community of users and contributors,
 you should come join us :ref:`on IRC <irc-channel>`
 or :ref:`our mailing-list <mailing-list>`.
 
-To read more about Celery you should visit our `website`_.
+To read more about Celery you should go read the :ref:`introduction <intro>`.
 
 While this version is backward compatible with previous versions
-it is important that you read the following section.
+it's important that you read the following section.
 
 If you use Celery in combination with Django you must also
 read the `django-celery changelog`_ and upgrade to `django-celery 2.6`_.
@@ -23,6 +26,35 @@ read the `django-celery changelog`_ and upgrade to `django-celery 2.6`_.
 This version is officially supported on CPython 2.5, 2.6, 2.7, 3.2 and 3.3,
 as well as PyPy and Jython.
 
+.. topic:: Highlights
+
+    - A new and improved API, that is both simpler and more powerful.
+
+        Everyone must read the new :ref:`first-steps` tutorial,
+        and the new :ref:`next-steps` tutorial.
+
+        There are no current plans to deprecate the old API,
+        so you don't have to be in a hurry to port your applications.
+
+    - The worker is now thread-less, giving great performance improvements.
+
+    - This is the last version to support Python 2.5
+
+    - The new "Canvas" makes it easy to define complex workflows.
+
+        Ever wanted to chain tasks together? This is possible, but
+        not just that, now you can even chain together groups and chords,
+        or even combine multiple chains.
+
+        Read more in the :ref:`Canvas <guide-canvas>` user guide.
+
+    - Support for the new librabbitmq C client.
+
+        Celery will automatically use the :mod:`librabbitmq` module
+        if installed, which is a very fast and memory-optimized
+        replacement for the amqplib module.
+
+    - Redis support is more reliable with improved ack emulation.
 
 .. _`website`: http://celeryproject.org/
 .. _`django-celery changelog`: http://bit.ly/djcelery-26-changelog
@@ -30,6 +62,7 @@ as well as PyPy and Jython.
 
 .. contents::
     :local:
+    :depth: 2
 
 .. _v260-important:
 
@@ -67,8 +100,8 @@ for the no-execv patch to work.
 - Issue #625
 - Issue #627
 - Issue #640
-- `django-celery #122 <http://github.com/ask/django-celery/issues/122`
-- `django-celery #124 <http://github.com/ask/django-celery/issues/122`
+- `django-celery #122 <http://github.com/celery/django-celery/issues/122`
+- `django-celery #124 <http://github.com/celery/django-celery/issues/122`
 
 Last version to support Python 2.5
 ----------------------------------
@@ -113,26 +146,8 @@ Tasks can now have callbacks and errbacks, and dependencies are recorded
     - ``link`` and ``link_error`` keyword arguments has been added
       to ``apply_async``.
 
-        The value passed can be either a subtask or a list of
-        subtasks:
-
-        .. code-block:: python
-
-            add.apply_async((2, 2), link=mul.subtask())
-            add.apply_async((2, 2), link=[mul.subtask(), echo.subtask()])
-
-        Example error callback:
-
-        .. code-block:: python
-
-            @task
-            def error_handler(uuid):
-                result = AsyncResult(uuid)
-                exc = result.get(propagate=False)
-                print("Task %r raised exception: %r\n%r" % (
-                    exc, result.traceback))
-
-            >>> add.apply_async((2, 2), link_error=error_handler)
+        These add callbacks and errbacks to the task, and
+        you can read more about them at :ref:`calling-links`.
 
     - We now track what subtasks a task sends, and some result backends
       supports retrieving this information.
@@ -162,7 +177,7 @@ Tasks can now have callbacks and errbacks, and dependencies are recorded
 
             .. code-block:: python
 
-                with open("graph.dot") as fh:
+                with open('graph.dot') as fh:
                     result.graph.to_dot(fh)
 
             which can than be used to produce an image::
@@ -176,7 +191,7 @@ Tasks can now have callbacks and errbacks, and dependencies are recorded
         >>> from celery import chain
 
         # (2 + 2) * 8 / 2
-        >>> res = chain(add.subtask((4, 4)),
+        >>> res = chain(add.subtask((2, 2)),
                         mul.subtask((8, )),
                         div.subtask((2,))).apply_async()
         >>> res.get() == 16
@@ -194,7 +209,7 @@ Tasks can now have callbacks and errbacks, and dependencies are recorded
 
 - Adds ``subtask.link(subtask)`` + ``subtask.link_error(subtask)``
 
-    Shortcut to ``s.options.setdefault("link", []).append(subtask)``
+    Shortcut to ``s.options.setdefault('link', []).append(subtask)``
 
 - Adds ``subtask.flatten_links()``
 
@@ -202,9 +217,6 @@ Tasks can now have callbacks and errbacks, and dependencies are recorded
 
 `group`/`chord`/`chain` are now subtasks
 ----------------------------------------
-
-- The source code for these, including subtask, has been moved
-  to new module celery.canvas.
 
 - group is no longer an alias to TaskSet, but new alltogether,
   since it was very difficult to migrate the TaskSet class to become
@@ -216,7 +228,7 @@ Tasks can now have callbacks and errbacks, and dependencies are recorded
 
     as a shortcut to::
 
-        >>> task.subtask((arg1, arg2), {"kw": 1})
+        >>> task.subtask((arg1, arg2), {'kw': 1})
 
 - Tasks can be chained by using the ``|`` operator::
 
@@ -266,6 +278,73 @@ Tasks can now have callbacks and errbacks, and dependencies are recorded
                     tasks.add(8, 8),
                     tasks.add(9, 9)]) | tasks.pow(2)
 
+Additional control commands made public
+---------------------------------------
+
+- ``add_consumer``/``cancel_consumer``
+
+    Tells workers to consume from a new queue, or cancel consuming from a
+    queue.  This command has also been changed so that the worker remembers
+    the queues added, so that the change will persist even if
+    the connection is re-connected.
+
+    These commands are available programmatically as
+    :meth:`@control.add_consumer` / :meth:`@control.cancel_consumer`:
+
+    .. code-block:: python
+
+        >>> celery.control.add_consumer(queue_name,
+        ...     destination=['w1.example.com'])
+        >>> celery.control.cancel_consumer(queue_name,
+        ...     destination=['w1.example.com'])
+
+    or using the :program:`celery control` command::
+
+        $ celery control -d w1.example.com add_consumer queue
+        $ celery control -d w1.example.com cancel_consumer queue
+
+    .. note::
+
+        Remember that a control command without *destination* will be
+        sent to **all workers**.
+
+- ``autoscale``
+
+    Tells workers with `--autoscale` enabled to change autoscale
+    max/min concurrency settings.
+
+    This command is available programmatically as :meth:`@control.autoscale`:
+
+    .. code-block:: python
+
+        >>> celery.control.autoscale(max=10, min=5,
+        ...     destination=['w1.example.com'])
+
+    or using the :program:`celery control` command::
+
+        $ celery control -d w1.example.com autoscale 10 5
+
+- ``pool_grow``/``pool_shrink``
+
+    Tells workers to add or remove pool processes.
+
+    These commands are available programmatically as
+    :meth:`@control.pool_grow` / :meth:`@control.pool_shrink`:
+
+    .. code-block:: python
+
+        >>> celery.control.pool_grow(2, destination=['w1.example.com'])
+        >>> celery.contorl.pool_shrink(2, destination=['w1.example.com'])
+
+    or using the :program:`celery control` command::
+
+        $ celery control -d w1.example.com pool_grow 2
+        $ celery control -d w1.example.com pool_shrink 2
+
+- :program:`celery control` now supports ``rate_limit`` & ``time_limit``
+  commands.
+
+    See ``celery control --help`` for details.
 
 Crontab now supports Day of Month, and Month of Year arguments
 --------------------------------------------------------------
@@ -276,7 +355,7 @@ Immutable subtasks
 ------------------
 
 ``subtask``'s can now be immutable, which means that the arguments
-will not be modified when applying callbacks::
+will not be modified when calling callbacks::
 
     >>> chain(add.s(2, 2), clear_static_electricity.si())
 
@@ -323,7 +402,7 @@ Logging support now conforms better with best practices.
 
         @celery.task()
         def add(x, y):
-            logger.debug("Adding %r + %r" % (x, y))
+            logger.debug('Adding %r + %r' % (x, y))
             return x + y
 
     The resulting logger will then inherit from the ``"celery.task"`` logger
@@ -364,7 +443,7 @@ by default, it will first be bound (and configured) when
 a concrete subclass is created.
 
 This means that you can safely import and make task base classes,
-without also initializing the default app environment::
+without also initializing the app environment::
 
     from celery.task import Task
 
@@ -372,7 +451,7 @@ without also initializing the default app environment::
         abstract = True
 
         def __call__(self, *args, **kwargs):
-            print("CALLING %r" % (self, ))
+            print('CALLING %r' % (self, ))
             return self.run(*args, **kwargs)
 
     >>> DebugTask
@@ -415,9 +494,9 @@ E.g. if you have a project named 'proj' where the
 celery app is located in 'from proj.celery import celery',
 then the following will be equivalent::
 
-        $ celeryd --app=proj
-        $ celeryd --app=proj.celery:
-        $ celeryd --app=proj.celery:celery
+        $ celery worker --app=proj
+        $ celery worker --app=proj.celery:
+        $ celery worker --app=proj.celery:celery
 
 In Other News
 -------------
@@ -448,13 +527,13 @@ In Other News
 
     .. code-block:: python
 
-        celery = Celery(broker="redis://")
+        celery = Celery(broker='redis://')
 
 - Result backends can now be set using an URL
 
     Currently only supported by redis.  Example use::
 
-        CELERY_RESULT_BACKEND = "redis://localhost/1"
+        CELERY_RESULT_BACKEND = 'redis://localhost/1'
 
 - Heartbeat frequency now every 5s, and frequency sent with event
 
@@ -479,11 +558,11 @@ In Other News
 
             @wraps(fun)
             def _inner(*args, **kwargs):
-                print("ARGS: %r" % (args, ))
+                print('ARGS: %r' % (args, ))
             return _inner
 
         CELERY_ANNOTATIONS = {
-            "tasks.add": {"@__call__": debug_args},
+            'tasks.add': {'@__call__': debug_args},
         }
 
     Also tasks are now always bound by class so that
@@ -496,16 +575,21 @@ In Other News
         >>> import celery
         >>> print(celery.bugreport())
 
-    - Use celeryctl::
+    - Using the ``celery`` command-line program::
 
-        $ celeryctl report
+        $ celery report
 
     - Get it from remote workers::
 
-        $ celeryctl inspect report
+        $ celery inspect report
 
 - Module ``celery.log`` moved to :mod:`celery.app.log`.
+
 - Module ``celery.task.control`` moved to :mod:`celery.app.control`.
+
+- New signal: :signal:`task-revoked`
+
+    Sent in the main process when the task is revoked or terminated.
 
 - ``AsyncResult.task_id`` renamed to ``AsyncResult.id``
 
@@ -513,7 +597,7 @@ In Other News
 
 - ``xmap(task, sequence)`` and ``xstarmap(task, sequence)``
 
-    Returns a list of the results applying the task to every item
+    Returns a list of the results applying the task function to every item
     in the sequence.
 
     Example::
@@ -551,7 +635,9 @@ In Other News
 
     .. code-block:: python
 
-        i = celery.control.inspect(connection=BrokerConnection("redis://"))
+        from kombu import Connection
+
+        i = celery.control.inspect(connection=Connection('redis://'))
         i.active_queues()
 
 * Module :mod:`celery.app.task` is now a module instead of a package.
@@ -566,7 +652,7 @@ In Other News
 * :setting:`CELERY_FORCE_EXECV` is now enabled by default.
 
     If the old behavior is wanted the setting can be set to False,
-    or the new :option:`--no-execv` to :program:`celeryd`.
+    or the new :option:`--no-execv` to :program:`celery worker`.
 
 * Deprecated module ``celery.conf`` has been removed.
 
@@ -581,12 +667,12 @@ In Other News
   :setting:`CELERYBEAT_MAX_LOOP_INTERVAL` setting, it is instead
   set by individual schedulers.
 
-* celeryd now truncates very long message bodies in error reports.
+* Worker: now truncates very long message bodies in error reports.
 
 * :envvar:`CELERY_BENCH` environment variable, will now also list
-  memory usage statistics at celeryd shutdown.
+  memory usage statistics at worker shutdown.
 
-* celeryd now only ever use a single timer for all timing needs,
+* Worker: now only ever use a single timer for all timing needs,
   and instead set different priorities.
 
 Internals
@@ -637,7 +723,7 @@ to create tasks out of methods::
         def __init__(self):
             self.value = 1
 
-        @celery.task(name="Counter.increment", filter=task_method)
+        @celery.task(name='Counter.increment', filter=task_method)
         def increment(self, n=1):
             self.value += 1
             return self.value
@@ -645,16 +731,36 @@ to create tasks out of methods::
 
 See :mod:`celery.contrib.methods` for more information.
 
-.. _v260-deprecations:
+.. _v260-unscheduled-removals:
 
-Deprecations
-============
+Unscheduled Removals
+====================
 
+Usually we don't make backward incompatible removals,
+but these removals should have no major effect.
 
 - The following settings have been renamed:
 
     - ``CELERYD_ETA_SCHEDULER`` -> ``CELERYD_TIMER``
     - ``CELERYD_ETA_SCHEDULER_PRECISION`` -> ``CELERYD_TIMER_PRECISION``
+
+.. _v260-deprecations:
+
+Deprecations
+============
+
+See the :ref:`deprecation-timeline`.
+
+The following undocumented API's has been moved:
+
+- ``control.inspect.add_consumer`` -> :meth:`@control.add_consumer`.
+- ``control.inspect.cancel_consumer`` -> :meth:`@control.cancel_consumer`.
+- ``control.inspect.enable_events`` -> :meth:`@control.enable_events`.
+- ``control.inspect.disable_events`` -> :meth:`@control.disable_events`.
+
+This way ``inspect()`` is only used for commands that do not
+modify anything, while idempotent control commands that make changes
+are on the control objects.
 
 Fixes
 =====

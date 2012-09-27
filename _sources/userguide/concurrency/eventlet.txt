@@ -40,9 +40,11 @@ Enabling Eventlet
 =================
 
 You can enable the Eventlet pool by using the ``-P`` option to
-:program:`celeryd`::
+:program:`celery worker`:
 
-    $ celeryd -P eventlet -c 1000
+.. code-block:: bash
+
+    $ celery worker -P eventlet -c 1000
 
 .. _eventlet-examples:
 
@@ -59,5 +61,5 @@ some examples taking use of Eventlet support.
     http://en.wikipedia.org/wiki/Asynchronous_I/O#Select.28.2Fpoll.29_loops
 .. _`Coroutines`: http://en.wikipedia.org/wiki/Coroutine
 .. _`Eventlet examples`:
-    https://github.com/ask/celery/tree/master/examples/eventlet
+    https://github.com/celery/celery/tree/master/examples/eventlet
 

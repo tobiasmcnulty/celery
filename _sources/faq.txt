@@ -48,6 +48,119 @@ And to some degree:
 Misconceptions
 ==============
 
+.. _faq-loc:
+
+Does Celery really consist of 50.000 lines of code?
+---------------------------------------------------
+
+**Answer:** No, this and similarly large numbers have
+been reported at various locations.
+
+The numbers as of this writing are:
+
+    - core: 7,141 lines of code.
+    - tests: 14,209 lines.
+    - backends, contrib, compat utilities: 9,032 lines.
+
+Lines of code is not a useful metric, so
+even if Celery did consist of 50k lines of code you would not
+be able to draw any conclusions from such a number.
+
+Does Celery have many dependencies?
+-----------------------------------
+
+A common criticism is that Celery uses too many dependencies.
+The rationale behind such a fear is hard to imagine, especially considering
+code reuse as the established way to combat complexity in modern software
+development, and that the cost of adding dependencies is very low now
+that package managers like pip and PyPI makes the hassle of installing
+and maintaining dependencies a thing of the past.
+
+Celery has replaced several dependencies along the way, and
+the current list of dependencies are:
+
+celery
+~~~~~~
+
+- `kombu`_
+
+Kombu is part of the Celery ecosystem and is the library used
+to send and receive messages.  It is also the library that enables
+us to support many different message brokers.  It is also used by the
+OpenStack project, and many others, validating the choice to separate
+it from the Celery codebase.
+
+.. _`kombu`: http://pypi.python.org/pypi/kombu
+
+- `billiard`_
+
+Billiard is a fork of the Python multiprocessing module containing
+many performance and stability improvements.  It is an eventual goal
+that these improvements will be merged back into Python one day.
+
+It is also used for compatibility with older Python versions.
+
+.. _`billiard`: http://pypi.python.org/pypi/billiard
+
+- `python-dateutil`_
+
+The dateutil module is used by Celery to parse ISO-8601 formatted time strings,
+as well as its ``relativedelta`` class which is used in the implementation
+of crontab style periodic tasks.
+
+.. _`python-dateutil`: http://pypi.python.org/pypi/python-dateutil
+
+django-celery
+~~~~~~~~~~~~~
+
+If you use django-celery then you don't have to install celery separately,
+as it will make sure that the required version is installed.
+
+django-celery does not have any other dependencies.
+
+kombu
+~~~~~
+
+Kombu depends on the following packages:
+
+- `amqplib`_
+
+The underlying pure-Python amqp client implementation.  AMQP being the default
+broker it is a natural dependency.
+
+.. _`amqplib`: http://pypi.python.org/pypi/amqplib
+
+- `anyjson`_
+
+anyjson is an utility library to select the best possible
+JSON implementation.
+
+.. _`anyjson`: http://pypi.python.org/pypi/anyjson
+
+
+.. note::
+
+    For compatibility reasons additional packages may be installed
+    if you are running on older Python versions,
+    for example Python 2.6 depends on the ``importlib``,
+    and ``ordereddict`` libraries.
+
+    Also, to handle the dependencies for popular configuration
+    choices Celery defines a number of "bundle" packages,
+    see :ref:`bundles`.
+
+
+.. _faq-heavyweight:
+
+Is Celery heavy-weight?
+-----------------------
+
+Celery poses very little overhead both in memory footprint and
+performance.
+
+But please note that the default configuration is not optimized for time nor
+space, see the :ref:`guide-optimizing` guide for more information.
+
 .. _faq-serializion-is-a-choice:
 
 Is Celery dependent on pickle?
@@ -89,13 +202,10 @@ Do I have to use AMQP/RabbitMQ?
 **Answer**: No.
 
 You can also use Redis, Beanstalk, CouchDB, MongoDB or an SQL database,
-see `Using other queues`_.
+see :ref:`brokers`.
 
 These "virtual transports" may have limited broadcast and event functionality.
 For example remote control commands only works with AMQP and Redis.
-
-.. _`Using other queues`:
-    http://ask.github.com/celery/tutorials/otherqueues.html
 
 Redis or a database won't perform as well as
 an AMQP broker. If you have strict reliability requirements you are
@@ -125,7 +235,7 @@ information you can even create simple web servers that enable preloading of
 code. See: `User Guide: Remote Tasks`_.
 
 .. _`User Guide: Remote Tasks`:
-    http://ask.github.com/celery/userguide/remote-tasks.html
+    http://celery.github.com/celery/userguide/remote-tasks.html
 
 .. _faq-troubleshooting:
 
@@ -205,7 +315,9 @@ Why aren't my tasks processed?
 ------------------------------
 
 **Answer:** With RabbitMQ you can see how many consumers are currently
-receiving tasks by running the following command::
+receiving tasks by running the following command:
+
+.. code-block:: bash
 
     $ rabbitmqctl list_queues -p <myvhost> name messages consumers
     Listing queues ...
@@ -262,20 +374,27 @@ Why won't my periodic task run?
 How do I purge all waiting tasks?
 ---------------------------------
 
-**Answer:** You can use celeryctl to purge all configured task queues::
+**Answer:** You can use the ``celery purge`` command to purge
+all configured task queues:
 
-        $ celeryctl purge
+.. code-block:: bash
 
-or programatically::
+    $ celery purge
 
-        >>> from celery import current_app as celery
-        >>> celery.control.purge()
-        1753
+or programatically:
+
+.. code-block:: python
+
+    >>> from celery import current_app as celery
+    >>> celery.control.purge()
+    1753
 
 If you only want to purge messages from a specific queue
-you have to use the AMQP API or the :program:`camqadm` utility::
+you have to use the AMQP API or the :program:`celery amqp` utility:
 
-    $ camqadm queue.purge <queue name>
+.. code-block:: bash
+
+    $ celery amqp queue.purge <queue name>
 
 The number 1753 is the number of messages deleted.
 
@@ -451,8 +570,8 @@ Tasks
 
 .. _faq-tasks-connection-reuse:
 
-How can I reuse the same connection when applying tasks?
---------------------------------------------------------
+How can I reuse the same connection when calling tasks?
+-------------------------------------------------------
 
 **Answer**: See the :setting:`BROKER_POOL_LIMIT` setting.
 The connection pool is enabled by default since version 2.5.
@@ -490,11 +609,11 @@ queue for exchange, so that rejected messages is moved there.
 
 .. _faq-execute-task-by-name:
 
-Can I execute a task by name?
+Can I call a task by name?
 -----------------------------
 
 **Answer**: Yes. Use :func:`celery.execute.send_task`.
-You can also execute a task by name from any language
+You can also call a task by name from any language
 that has an AMQP client.
 
     >>> from celery.execute import send_task
@@ -527,7 +646,7 @@ Can I specify a custom task_id?
 Can I use decorators with tasks?
 --------------------------------
 
-**Answer**: Yes.  But please see note at :ref:`tasks-decorating`.
+**Answer**: Yes.  But please see note in the sidebar at :ref:`task-basics`.
 
 .. _faq-natural-task-ids:
 
@@ -546,28 +665,27 @@ How can I run a task once another task has finished?
 ----------------------------------------------------
 
 **Answer**: You can safely launch a task inside a task.
-Also, a common pattern is to use callback tasks:
+Also, a common pattern is to add callbacks to tasks:
 
 .. code-block:: python
 
-    @celery.task()
-    def add(x, y, callback=None):
-        result = x + y
-        if callback:
-            subtask(callback).delay(result)
-        return result
+    from celery.utils.log import get_task_logger
 
+    logger = get_task_logger(__name__)
+
+    @celery.task
+    def add(x, y):
+        return x + y
 
     @celery.task(ignore_result=True)
-    def log_result(result, **kwargs):
-        logger = log_result.get_logger(**kwargs)
-        logger.info("log_result got: %s" % (result, ))
+    def log_result(result):
+        logger.info("log_result got: %r" % (result, ))
 
 Invocation::
 
-    >>> add.delay(2, 2, callback=log_result.subtask())
+    >>> (add.s(2, 2) | log_result.s()).delay()
 
-See :doc:`userguide/tasksets` for more information.
+See :doc:`userguide/canvas` for more information.
 
 .. _faq-cancel-task:
 
@@ -594,7 +712,9 @@ so if you have more than one worker with the same host name, the
 control commands will be received in round-robin between them.
 
 To work around this you can explicitly set the host name for every worker
-using the :option:`--hostname` argument to :mod:`~celery.bin.celeryd`::
+using the :option:`--hostname` argument to :mod:`~celery.bin.celeryd`:
+
+.. code-block:: bash
 
     $ celeryd --hostname=$(hostname).1
     $ celeryd --hostname=$(hostname).2
@@ -667,7 +787,7 @@ this is rarely the case. Imagine the following task:
 
 .. code-block:: python
 
-    @celery.task()
+    @celery.task
     def process_upload(filename, tmpfile):
         # Increment a file count stored in a database
         increment_file_counter()
@@ -778,7 +898,9 @@ celeryd keeps spawning processes at startup
 -------------------------------------------
 
 **Answer**: This is a known issue on Windows.
-You have to start celeryd with the command::
+You have to start celeryd with the command:
+
+.. code-block:: bash
 
     $ python -m celery.bin.celeryd
 
@@ -792,15 +914,3 @@ The `-B` / `--beat` option to celeryd doesn't work?
 ----------------------------------------------------------------
 **Answer**: That's right. Run `celerybeat` and `celeryd` as separate
 services instead.
-
-.. _faq-windows-django-settings:
-
-`django-celery` can't find settings?
---------------------------------------
-
-**Answer**: You need to specify the :option:`--settings` argument to
-:program:`manage.py`::
-
-    $ python manage.py celeryd start --settings=settings
-
-See http://bit.ly/bo9RSw

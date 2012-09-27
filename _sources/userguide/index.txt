@@ -8,14 +8,14 @@
 :Date: |today|
 
 .. toctree::
-    :maxdepth: 2
+    :maxdepth: 1
 
-    overview
+    application
     tasks
-    executing
+    calling
+    canvas
     workers
     periodic-tasks
-    groups
     remote-tasks
     routing
     monitoring
